@@ -81,7 +81,7 @@ class LaporanController extends Controller
         $laporan = Laporan::findOrFail($id);
 
         // Validasi Pemilik Tugas
-        if ($laporan->teknisi_id !== Auth::id()) {
+        if ($laporan->teknisi_id != Auth::id()) {
             return back()->with('error', 'Gagal: Tugas ini bukan milik Anda.');
         }
 
