@@ -42,6 +42,8 @@
                     {{-- ========================================================= --}}
                     {{-- KONDISI 1A: TIKET DICARI TAPI TIDAK DITEMUKAN (ERROR) --}}
                     {{-- ========================================================= --}}
+
+                    {{-- Tampilan murni hanya error, form pencarian dihilangkan --}}
                     <div
                         class="max-w-md mx-auto bg-white rounded-[2rem] shadow-xl p-8 text-center mt-10 border border-rose-100">
 
@@ -64,10 +66,10 @@
                             </p>
                         </div>
 
-                        {{-- Tombol Kembali Saja (Menghapus parameter url agar kembali ke form kosong) --}}
-                        <a href="{{ url()->current() }}"
+                        {{-- Tombol Kembali Langsung ke Landing Page --}}
+                        <a href="{{ url('/') }}"
                             class="btn-shine w-full py-4 bg-[#0F2854] hover:bg-[#1A3A73] text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 font-['Montserrat']">
-                            <i data-feather="arrow-left" class="w-4 h-4"></i> Kembali
+                            <i data-feather="home" class="w-4 h-4"></i> Kembali ke Beranda
                         </a>
                     </div>
                 @else
