@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+
+class StoreUserRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return auth()->user()->role === 'admin';
+    }
+
+
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string'],
+            'username' => ['required', 'string', 'unique:users,username,' . $this->user],
+            'password' => ['required', 'string', 'min:6'],
+            'role' => ['required', 'in:admin,teknisi,user'],
+        ];
+    }
+}
