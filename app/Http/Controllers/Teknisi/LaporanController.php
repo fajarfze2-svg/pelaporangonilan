@@ -69,7 +69,7 @@ class LaporanController extends Controller
     {
         $laporan = Laporan::findOrFail($id);
 
-        if ($laporan->teknisi_id !== Auth::id()) {
+        if ($laporan->teknisi_id != Auth::id()) {
             abort(403, 'Akses Ditolak: Tugas ini bukan milik Anda.');
         }
         return view('teknisi.laporan.show', compact('laporan'));
@@ -111,7 +111,7 @@ class LaporanController extends Controller
         $laporan = Laporan::findOrFail($request->task_id);
 
         // 1. Validasi Security (Wajib)
-        if ($laporan->teknisi_id !== Auth::id()) {
+        if ($laporan->teknisi_id != Auth::id()) {
             return back()->with('error', 'UPLOAD GAGAL. Tugas ini bukan milik akun Anda.');
         }
 
