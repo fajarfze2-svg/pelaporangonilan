@@ -255,7 +255,7 @@
                             class="w-6 h-6 text-navy-500 group-hover:text-gold-500 transition-colors"></i>
                     </div>
                     <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
-                        data-target="{{ $totalLaporan ?? 1284 }}">0</h3>
+                        data-target="{{ $totalLaporan ?? 0 }}">0</h3>
                     <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Total Laporan</p>
                 </div>
 
@@ -267,7 +267,7 @@
                             class="w-6 h-6 text-navy-500 group-hover:text-gold-500 transition-colors"></i>
                     </div>
                     <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
-                        data-target="{{ $laporanSelesai ?? 1086 }}">0</h3>
+                        data-target="{{ $laporanSelesai ?? 0 }}">0</h3>
                     <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Selesai Ditangani</p>
                 </div>
 
@@ -279,7 +279,8 @@
                             class="w-6 h-6 text-navy-500 group-hover:text-gold-500 transition-colors"></i>
                     </div>
                     <div class="flex items-baseline justify-center gap-1">
-                        <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter" data-target="3">0</h3>
+                        <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
+                            data-target="{{ round($rataRataRespon ?? 0) }}">0</h3>
                         <span class="text-sm font-bold text-gold-500">Jam</span>
                     </div>
                     <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Rata-rata Respon</p>
@@ -289,14 +290,14 @@
                     class="text-center px-4 hover:-translate-y-2 active:scale-95 transition-transform duration-300 cursor-default group">
                     <div
                         class="w-14 h-14 mx-auto bg-gov-50 rounded-2xl flex items-center justify-center mb-4 border border-gov-100 group-hover:border-gold-500 transition-colors">
-                        <i data-feather="heart"
+                        <i data-feather="calendar"
                             class="w-6 h-6 text-navy-500 group-hover:text-gold-500 transition-colors"></i>
                     </div>
                     <div class="flex items-baseline justify-center gap-1">
-                        <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter" data-target="98">0</h3>
-                        <span class="text-sm font-bold text-gold-500">%</span>
+                        <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
+                            data-target="{{ $laporanBulanIni ?? 0 }}">0</h3>
                     </div>
-                    <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Kepuasan Publik</p>
+                    <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Laporan Bulan Ini</p>
                 </div>
             </div>
         </div>

@@ -11,12 +11,37 @@ class PublicLaporanController extends Controller
 
     public function index()
     {
+        // Menggunakan Carbon secara langsung untuk efisiensi
+        $now = \Carbon\Carbon::now();
+
+        // 1. Total Seluruh Laporan
         $totalLaporan = Laporan::count();
+
+        // 2. Laporan Selesai
+        // Catatan: Pastikan value 'selesai' sesuai dengan database Anda (misal: 'Selesai' atau 'Finished')
         $laporanSelesai = Laporan::where('status', 'selesai')->count();
 
-        return view('welcome', compact('totalLaporan', 'laporanSelesai'));
-    }
+        // 3. Rekap Laporan Bulan Ini (Otomatis reset tiap ganti bulan)
+        $laporanBulanIni = Laporan::whereMonth('created_at', $now->month)
+            ->whereYear('created_at', $now->year)
+            ->count();
 
+        // 4. Bonus: Rata-rata Respon (Untuk mengisi angka "3 Jam" di UI Anda)
+        // Menghitung selisih created_at dan updated_at (atau kolom tanggapan) dalam satuan jam
+        $rataRataRespon = Laporan::where('status', 'selesai')
+            ->whereNotNull('updated_at')
+            ->get()
+            ->avg(function ($laporan) {
+                return $laporan->created_at->diffInHours($laporan->updated_at);
+            }) ?? 0;
+
+        return view('welcome', compact(
+            'totalLaporan',
+            'laporanSelesai',
+            'laporanBulanIni',
+            'rataRataRespon'
+        ));
+    }
 
     public function create()
     {
