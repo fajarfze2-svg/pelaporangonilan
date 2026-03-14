@@ -21,6 +21,7 @@ class UserManagementController extends Controller
     {
         return view('admin.users.edit', compact('user'));
     }
+
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -51,7 +52,7 @@ class UserManagementController extends Controller
     }
 
     // ==========================================
-    // FITUR BARU: RESET PASSWORD KE DEFAULT
+    // FITUR: RESET PASSWORD KE DEFAULT
     // ==========================================
     public function resetPassword(User $user)
     {
@@ -71,4 +72,31 @@ class UserManagementController extends Controller
             ->route('admin.users.index')
             ->with('success', 'Password milik ' . $user->name . ' berhasil direset menjadi: password123. User wajib menggantinya saat login.');
     }
-}
+
+    // ==========================================
+    // FITUR: HAPUS USER
+    // ==========================================
+    public function destroy(User $user)
+    {
+        // 1. Cegah admin menghapus dirinya sendiri
+        if (auth()->id() === $user->id) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        try {
+            $userName = $user->name;
+            $user->delete();
+
+            return redirect()
+                ->route('admin.users.index')
+                ->with('success', 'User ' . $userName . ' berhasil dihapus dari sistem.');
+        } catch (\Exception $e) {
+            // 2. Antisipasi jika user memiliki relasi data (misal: laporan) yang mencegah penghapusan
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Gagal menghapus user. Data mungkin sedang digunakan di tabel lain.');
+        }
+    }
+} 
