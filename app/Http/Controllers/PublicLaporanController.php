@@ -52,17 +52,36 @@ class PublicLaporanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama'       => 'required',
+            'nama'       => 'required|string|max:255',
             'lokasi'     => 'required|string',
-            'deskripsi'  => 'required|string',
-            'foto_awal'  => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-            'latitude'   => 'nullable',
-            'longitude'  => 'nullable',
+            'deskripsi'  => 'required|string|min:10',
+            'foto_awal'  => 'required|image|mimes:jpeg,png,jpg|max:5120', // Diubah jadi required
+            'latitude'   => 'required', // Wajib agar peta tidak kosong
+            'longitude'  => 'required',
             'kategori'   => 'required',
             'no_telepon' => 'required|string|max:20',
             'dusun'      => 'required|string',
             'rt'         => 'required|string',
             'rw'         => 'required|string',
+        ], [
+            // Pesan Error Custom dalam Bahasa Indonesia
+            'required' => ':attribute tidak boleh kosong.',
+            'image'    => ':attribute harus berupa gambar.',
+            'mimes'    => 'Format gambar harus jpeg, png, atau jpg.',
+            'max'      => 'Ukuran :attribute maksimal 5MB.',
+            'min'      => ':attribute terlalu pendek.',
+        ], [
+            // Nama Alias Field (agar pesan error lebih enak dibaca)
+            'nama'       => 'Nama Lengkap',
+            'lokasi'     => 'Patokan Lokasi',
+            'deskripsi'  => 'Deskripsi Laporan',
+            'foto_awal'  => 'Foto Bukti',
+            'latitude'   => 'Titik Koordinat',
+            'kategori'   => 'Kategori Masalah',
+            'no_telepon' => 'Nomor WhatsApp',
+            'dusun'      => 'Dusun',
+            'rt'         => 'RT',
+            'rw'         => 'RW',
         ]);
 
         // =========================================================

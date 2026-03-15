@@ -88,7 +88,7 @@
         .reveal {
             opacity: 0;
             transform: translateY(30px) scale(0.98);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal.active {
@@ -149,46 +149,67 @@
 
 <body class="font-sans bg-gov-50 text-gov-900 antialiased selection:bg-navy-500 selection:text-white overflow-x-hidden">
 
-    {{-- ================= NAVBAR ================= --}}
-    <nav id="navbar"
-        class="fixed top-4 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 flex justify-center">
-        <div id="nav-container"
-            class="w-full max-w-5xl bg-navy-900/50 backdrop-blur-md border border-white/10 rounded-full p-2 flex justify-between items-center transition-all duration-500 shadow-glass">
+{{-- ================= NAVBAR ================= --}}
+<nav id="navbar" class="fixed top-4 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 flex justify-center">
+    <div id="nav-container" class="relative w-full max-w-5xl bg-navy-900/50 backdrop-blur-md border border-white/10 rounded-full p-2 flex items-center justify-between transition-all duration-500 shadow-glass">
 
-            <a href="#"
-                class="w-10 h-10 ml-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center shadow-sm shrink-0 group overflow-hidden active:scale-90 transition-transform duration-300">
-                <i data-feather="layers"
-                    class="text-gold-500 w-5 h-5 relative z-10 group-hover:scale-110 transition-all duration-300"></i>
-            </a>
+        {{-- 1. Sisi Kiri: Hamburger Menu (Hanya Mobile) --}}
+        <div class="flex items-center z-10">
+            <button id="mobile-menu-btn" class="md:hidden w-10 h-10 ml-1 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white active:scale-90 transition-all">
+                <i data-feather="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
 
-            <div class="hidden md:flex items-center gap-1 px-4 text-sm font-semibold text-white transition-colors duration-300"
-                id="nav-menu">
-                <a href="#"
-                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 active:scale-95 transition-all tracking-wide">Beranda</a>
-                <a href="#layanan"
-                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 active:scale-95 transition-all tracking-wide">Layanan</a>
-                <a href="#tracking"
-                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 active:scale-95 transition-all tracking-wide">Cek
-                    Status</a>
-                <a href="#faq"
-                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 active:scale-95 transition-all tracking-wide">Bantuan</a>
+        {{-- 2. Sisi Tengah: Navigasi Desktop (Benar-benar Center secara Absolut) --}}
+        {{-- whitespace-nowrap memastikan teks tidak terbagi atas bawah --}}
+        <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 text-sm font-semibold text-white whitespace-nowrap" id="nav-menu">
+            <a href="#" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Beranda</a>
+            <a href="#layanan" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Layanan</a>
+            <a href="#tracking" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Cek Status</a>
+            <a href="#faq" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Bantuan</a>
+        </div>
+
+        {{-- 3. Sisi Kanan: Tombol Portal --}}
+        <div class="flex items-center z-10 mr-1">
+            @auth
+                <a href="{{ url('/dashboard') }}" id="nav-btn" class="whitespace-nowrap flex items-center gap-2 px-5 md:px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-xs md:text-sm font-bold active:scale-95 transition-all shadow-glow-gold hover:bg-gold-400 tracking-wide">
+                    Dashboard
+                </a>
+            @else
+                <a href="{{ route('login') }}" id="nav-btn" class="whitespace-nowrap flex items-center gap-2 px-5 md:px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-xs md:text-sm font-bold active:scale-95 transition-all shadow-glow-gold group hover:bg-gold-400 tracking-wide">
+                    <i data-feather="log-in" class="w-4 h-4 hidden sm:block"></i> Portal Admin
+                </a>
+            @endauth
+        </div>
+
+    </div>
+</nav>
             </div>
+        </div>
 
-            <div class="shrink-0 mr-1">
-                @auth
-                    <a href="{{ url('/dashboard') }}"
-                        class="flex items-center gap-2 px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-sm font-bold active:scale-95 transition-all shadow-glow-gold hover:bg-gold-400 tracking-wide"
-                        id="nav-btn">
-                        Dashboard Portal
-                    </a>
-                @else
-                    <a href="{{ route('login') }}"
-                        class="flex items-center gap-2 px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-sm font-bold active:scale-95 transition-all shadow-glow-gold group hover:bg-gold-400 tracking-wide"
-                        id="nav-btn">
-                        <i data-feather="log-in"
-                            class="w-4 h-4 group-hover:scale-110 transition-transform text-navy-900"></i> Portal Admin
-                    </a>
-                @endauth
+        {{-- Mobile Drawer (Menu Overlay) --}}
+        <div id="mobile-drawer" class="fixed inset-0 z-[60] hidden">
+            <div class="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" id="drawer-overlay"></div>
+            <div class="absolute top-4 right-4 left-4 bg-navy-900 border border-white/10 rounded-3xl p-6 shadow-2xl transform transition-transform duration-300 -translate-y-full"
+                id="drawer-content">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-gold-500 font-black tracking-widest text-xs uppercase">Menu Navigasi</span>
+                    <button id="close-menu-btn"
+                        class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-white">
+                        <i data-feather="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <a href="#"
+                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Beranda</a>
+                    <a href="#layanan"
+                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Layanan</a>
+                    <a href="#tracking"
+                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Cek
+                        Status</a>
+                    <a href="#faq"
+                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Bantuan</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -208,7 +229,7 @@
             <span
                 class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold uppercase tracking-[0.2em] mb-8 shadow-sm cursor-default">
                 <span class="w-2 h-2 rounded-full bg-gold-500 animate-pulse"></span>
-                Portal Resmi Layanan Publik
+                Portal Resmi Masyarakat Desa Gonilan
             </span>
 
             {{-- Judul dengan Public Sans terlihat jauh lebih elegan dan formal --}}
@@ -220,7 +241,7 @@
 
             <p
                 class="text-base md:text-lg text-gov-100 font-medium leading-relaxed mb-12 max-w-2xl mx-auto drop-shadow-md">
-                Sampaikan laporan kerusakan fasilitas di sekitar Anda dengan mudah, dan pantau progres penanganannya
+                Sampaikan laporan kerusakan fasilitas di sekitar anda dengan mudah dan pantau progres penanganannya
                 secara real-time.
             </p>
 
@@ -531,14 +552,14 @@
     </footer>
 
     <script>
+        // Inisialisasi Feather Icons
         feather.replace();
 
+        // 1. Intersection Observer untuk Animasi Reveal
         const observerOptions = {
-            root: null,
-            rootMargin: '0px',
             threshold: 0.1
         };
-        const observer = new IntersectionObserver((entries, observer) => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
@@ -548,8 +569,9 @@
         }, observerOptions);
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
+        // 2. Counter Animation
         const counters = document.querySelectorAll('.counter');
-        const counterObserver = new IntersectionObserver((entries, observer) => {
+        const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const counter = entry.target;
@@ -568,7 +590,7 @@
                         }
                     };
                     updateCounter();
-                    observer.unobserve(counter);
+                    counterObserver.unobserve(counter);
                 }
             });
         }, {
@@ -576,6 +598,7 @@
         });
         counters.forEach(counter => counterObserver.observe(counter));
 
+        // 3. FAQ Accordion
         const faqItems = document.querySelectorAll(".faq-item");
         faqItems.forEach(item => {
             item.addEventListener("click", () => {
@@ -585,51 +608,93 @@
             });
         });
 
+        // 4. Navbar Scroll Effect & Mobile Menu Logic
         const navbar = document.getElementById("navbar");
         const navContainer = document.getElementById("nav-container");
         const navMenu = document.getElementById("nav-menu");
         const navLinks = document.querySelectorAll(".nav-link");
         const navBtn = document.getElementById("nav-btn");
 
+        // Element Mobile Baru
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const drawer = document.getElementById('mobile-drawer');
+        const drawerContent = document.getElementById('drawer-content');
+        const overlay = document.getElementById('drawer-overlay');
+
+        // Fungsi Toggle Mobile Menu
+        function toggleMenu() {
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => drawerContent.classList.remove('-translate-y-full'), 10);
+            } else {
+                drawerContent.classList.add('-translate-y-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+            }
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
+        if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+        if (overlay) overlay.addEventListener('click', toggleMenu);
+        document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', toggleMenu));
+
+        // Scroll Effect
         window.addEventListener("scroll", () => {
+            const mobileBtn = document.getElementById('mobile-menu-btn'); // Ambil tombol hamburger
+
             if (window.scrollY > 20) {
-                navbar.classList.add("top-2");
-                navbar.classList.remove("top-4");
-
+                navbar.classList.replace("top-4", "top-2");
                 navContainer.classList.remove("bg-navy-900/50", "border-white/10");
-                navContainer.classList.add("bg-white/90", "border-gov-200", "shadow-3d");
+                navContainer.classList.add("bg-white", "border-slate-200", "shadow-lg"); // White solid agar kontras
 
-                navMenu.classList.remove("text-white");
-                navMenu.classList.add("text-navy-900");
+                // Ubah warna teks menu desktop jadi gelap
+                if (navMenu) {
+                    navMenu.classList.remove("text-white");
+                    navMenu.classList.add("text-navy-900");
+                }
+
+                // Ubah warna tombol hamburger mobile jadi gelap
+                if (mobileBtn) {
+                    mobileBtn.classList.remove("text-white", "bg-white/10", "border-white/20");
+                    mobileBtn.classList.add("text-navy-900", "bg-slate-100", "border-slate-300");
+                }
 
                 navLinks.forEach(link => {
                     link.classList.remove("hover:bg-white/10", "hover:text-gold-400");
-                    link.classList.add("hover:bg-gov-100", "hover:text-gold-600");
+                    link.classList.add("hover:bg-slate-100", "hover:text-gold-600");
                 });
 
-                navBtn.classList.remove("bg-gold-500", "text-navy-900", "shadow-glow-gold", "hover:bg-gold-400");
-                navBtn.classList.add("bg-navy-500", "text-white", "hover:bg-navy-400");
-                const icon = navBtn.querySelector('i');
-                if (icon) icon.classList.remove("text-navy-900");
+                if (navBtn) {
+                    // Tombol portal tetap terlihat tapi disesuaikan sedikit
+                    navBtn.classList.remove("shadow-glow-gold");
+                    navBtn.classList.add("shadow-md");
+                }
             } else {
-                navbar.classList.add("top-4");
-                navbar.classList.remove("top-2");
-
+                navbar.classList.replace("top-2", "top-4");
                 navContainer.classList.add("bg-navy-900/50", "border-white/10");
-                navContainer.classList.remove("bg-white/90", "border-gov-200", "shadow-3d");
+                navContainer.classList.remove("bg-white", "border-slate-200", "shadow-lg");
 
-                navMenu.classList.add("text-white");
-                navMenu.classList.remove("text-navy-900");
+                // Kembalikan warna teks menu desktop ke putih
+                if (navMenu) {
+                    navMenu.classList.add("text-white");
+                    navMenu.classList.remove("text-navy-900");
+                }
+
+                // Kembalikan warna tombol hamburger mobile ke putih
+                if (mobileBtn) {
+                    mobileBtn.classList.add("text-white", "bg-white/10", "border-white/20");
+                    mobileBtn.classList.remove("text-navy-900", "bg-slate-100", "border-slate-300");
+                }
 
                 navLinks.forEach(link => {
                     link.classList.add("hover:bg-white/10", "hover:text-gold-400");
-                    link.classList.remove("hover:bg-gov-100", "hover:text-gold-600");
+                    link.classList.remove("hover:bg-slate-100", "hover:text-gold-600");
                 });
 
-                navBtn.classList.add("bg-gold-500", "text-navy-900", "shadow-glow-gold", "hover:bg-gold-400");
-                navBtn.classList.remove("bg-navy-500", "text-white", "hover:bg-navy-400");
-                const icon = navBtn.querySelector('i');
-                if (icon) icon.classList.add("text-navy-900");
+                if (navBtn) {
+                    navBtn.classList.add("shadow-glow-gold");
+                    navBtn.classList.remove("shadow-md");
+                }
             }
         });
     </script>

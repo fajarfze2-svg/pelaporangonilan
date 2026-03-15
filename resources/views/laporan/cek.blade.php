@@ -61,8 +61,7 @@
                             class="mb-8 p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-3 text-left">
                             <i data-feather="alert-circle" class="w-5 h-5 text-rose-600 shrink-0 mt-0.5"></i>
                             <p class="text-xs font-semibold text-rose-700 leading-relaxed font-['Inter']">
-                                Kode yang Anda kirim tidak sesuai. Silahkan sesuaikan dengan kode yang sudah terkirim
-                                pada Anda sebelumnya.
+                                Kode yang Anda kirim tidak sesuai. Silahkan sesuaikan dengan kode yang sudah terkirim sebelumnya.
                             </p>
                         </div>
 
