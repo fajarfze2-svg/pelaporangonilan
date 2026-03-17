@@ -301,32 +301,34 @@
                             </div>
                             <div class="mt-2 space-y-2.5">
                                 @php
-                                    // Definisikan mapping warna secara eksplisit agar mudah dibaca
-                                    $kategoriColors = [];
+                                    $kategoriColorsMap = [];
                                     foreach ($kategoriStats as $label => $count) {
                                         $kat = strtolower($label);
-                                        if (str_contains($kat, 'kerusakan')) {
-                                            $kategoriColors[] = '#FF0000'; // Merah
-                                        } elseif (str_contains($kat, 'kebersihan')) {
-                                            $kategoriColors[] = '#10B981'; // Hijau
+                                        if (strpos($kat, 'rusak') !== false || strpos($kat, 'kerusakan') !== false) {
+                                            $color = '#FF0000';
+                                        } elseif (
+                                            strpos($kat, 'bersih') !== false ||
+                                            strpos($kat, 'kebersihan') !== false
+                                        ) {
+                                            $color = '#10B981';
                                         } else {
-                                            $kategoriColors[] = '#3B82F6'; // Blue default
+                                            $color = '#3B82F6';
                                         }
+                                        $kategoriColorsMap[$label] = $color;
                                     }
                                 @endphp
-                                @php $index = 0; @endphp
+
                                 @foreach ($kategoriStats as $label => $count)
                                     <div
                                         class="flex justify-between items-center text-sm p-2 rounded-lg hover:bg-slate-50 transition-colors">
                                         <div class="flex items-center gap-2.5">
-                                            {{-- Gunakan inline style untuk background-color agar tidak terkena PurgeCSS --}}
+                                            {{-- Warna Legend --}}
                                             <span class="w-3 h-3 rounded-full shadow-sm"
-                                                style="background-color: {{ $kategoriColors[$index] }}"></span>
+                                                style="background-color: {{ $kategoriColorsMap[$label] }}"></span>
                                             <span class="font-medium text-slate-600">{{ $label }}</span>
                                         </div>
                                         <span class="font-bold text-slate-900">{{ $count }}</span>
                                     </div>
-                                    @php $index++; @endphp
                                 @endforeach
                             </div>
                         </div>
@@ -440,7 +442,7 @@
                         toolbar: {
                             show: false
                         },
-                        fontFamily: 'inherit',
+                        fontFamily: 'Inter, sans-serif',
                     },
                     colors: ['#FFE100'],
                     fill: {
@@ -477,6 +479,13 @@
                             show: false
                         },
                     },
+                    yaxis: {
+                        labels: {
+                            formatter: function(val) {
+                                return Math.floor(val);
+                            }
+                        }
+                    },
                     grid: {
                         borderColor: '#f1f5f9',
                         strokeDashArray: 4,
@@ -485,17 +494,15 @@
             }
 
             // 2. Donut Kategori
-            // Di dalam script chart-kategori
             if (Object.keys(kategoriStats).length > 0) {
                 const labels = Object.keys(kategoriStats);
 
+                // Logika warna yang disinkronkan dengan Blade
                 const dynamicColors = labels.map(label => {
                     const labelText = label.toLowerCase();
-                    // Gunakan pengecekan yang lebih luas untuk menghindari typo (misal: 'kerusakan fasilitas')
                     if (labelText.includes('rusak') || labelText.includes('kerusakan')) return '#FF0000';
                     if (labelText.includes('bersih') || labelText.includes('kebersihan')) return '#10B981';
-
-                    return '#3B82F6'; // Warna default jika tidak cocok
+                    return '#3B82F6'; // Default Blue
                 });
 
                 new ApexCharts(document.querySelector("#chart-kategori"), {
@@ -504,10 +511,43 @@
                     chart: {
                         type: 'donut',
                         height: 260,
-                        fontFamily: 'Inter, sans-serif' // Pastikan font terpasang
+                        fontFamily: 'Inter, sans-serif'
                     },
-                    colors: dynamicColors, // Menggunakan array warna yang sudah dibuat di atas
-                    // ... sisa konfigurasi lainnya
+                    colors: dynamicColors,
+                    stroke: {
+                        show: false
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    legend: {
+                        show: false
+                    }, // Legend manual sudah ada di Blade
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '75%',
+                                labels: {
+                                    show: false
+                                }
+                            }
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(val) {
+                                return val + " Laporan";
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                height: 220
+                            }
+                        }
+                    }]
                 }).render();
             }
         });
