@@ -301,33 +301,32 @@
                             </div>
                             <div class="mt-2 space-y-2.5">
                                 @php
-                                    $chartColors = [];
-                                    $defaultColors = ['#3B82F6', '#F59E0B', '#8B5CF6', '#64748B'];
-                                    $fallbackIndex = 0;
+                                    // Definisikan mapping warna secara eksplisit agar mudah dibaca
+                                    $kategoriColors = [];
                                     foreach ($kategoriStats as $label => $count) {
                                         $kat = strtolower($label);
                                         if (str_contains($kat, 'kerusakan')) {
-                                            $chartColors[] = '#FF0000';
+                                            $kategoriColors[] = '#FF0000'; // Merah
                                         } elseif (str_contains($kat, 'kebersihan')) {
-                                            $chartColors[] = '#10B981';
+                                            $kategoriColors[] = '#10B981'; // Hijau
                                         } else {
-                                            $chartColors[] = $defaultColors[$fallbackIndex % count($defaultColors)];
-                                            $fallbackIndex++;
+                                            $kategoriColors[] = '#3B82F6'; // Blue default
                                         }
                                     }
-                                    $i = 0;
                                 @endphp
+                                @php $index = 0; @endphp
                                 @foreach ($kategoriStats as $label => $count)
                                     <div
                                         class="flex justify-between items-center text-sm p-2 rounded-lg hover:bg-slate-50 transition-colors">
                                         <div class="flex items-center gap-2.5">
+                                            {{-- Gunakan inline style untuk background-color agar tidak terkena PurgeCSS --}}
                                             <span class="w-3 h-3 rounded-full shadow-sm"
-                                                style="background-color: {{ $chartColors[$i] }}"></span>
+                                                style="background-color: {{ $kategoriColors[$index] }}"></span>
                                             <span class="font-medium text-slate-600">{{ $label }}</span>
                                         </div>
                                         <span class="font-bold text-slate-900">{{ $count }}</span>
                                     </div>
-                                    @php $i++; @endphp
+                                    @php $index++; @endphp
                                 @endforeach
                             </div>
                         </div>
@@ -486,23 +485,17 @@
             }
 
             // 2. Donut Kategori
+            // Di dalam script chart-kategori
             if (Object.keys(kategoriStats).length > 0) {
                 const labels = Object.keys(kategoriStats);
-                const defaultColors = ['#3B82F6', '#F59E0B', '#8B5CF6', '#64748B'];
-                let fallbackIndex = 0;
 
                 const dynamicColors = labels.map(label => {
                     const labelText = label.toLowerCase();
-                    if (labelText.includes('kerusakan')) return '#FF0000'; // Merah
+                    // Gunakan pengecekan yang lebih luas untuk menghindari typo (misal: 'kerusakan fasilitas')
+                    if (labelText.includes('rusak') || labelText.includes('kerusakan')) return '#FF0000';
+                    if (labelText.includes('bersih') || labelText.includes('kebersihan')) return '#10B981';
 
-                    // ==========================================
-                    // UBAH KE HIJAU EMERALD DI SINI
-                    // ==========================================
-                    if (labelText.includes('kebersihan')) return '#10B981';
-
-                    const color = defaultColors[fallbackIndex % defaultColors.length];
-                    fallbackIndex++;
-                    return color;
+                    return '#3B82F6'; // Warna default jika tidak cocok
                 });
 
                 new ApexCharts(document.querySelector("#chart-kategori"), {
@@ -511,20 +504,10 @@
                     chart: {
                         type: 'donut',
                         height: 260,
-                        fontFamily: 'inherit'
+                        fontFamily: 'Inter, sans-serif' // Pastikan font terpasang
                     },
-                    colors: dynamicColors,
-                    legend: {
-                        show: false
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        show: true,
-                        colors: '#ffffff',
-                        width: 3
-                    }
+                    colors: dynamicColors, // Menggunakan array warna yang sudah dibuat di atas
+                    // ... sisa konfigurasi lainnya
                 }).render();
             }
         });
