@@ -424,7 +424,8 @@
     {{-- ================= CHART SCRIPT ================= --}}
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        // Gunakan window.onload agar memastikan library ApexCharts terisi penuh di hosting
+        window.onload = function() {
 
             const chartData = @json($chartData ?? []);
             const kategoriStats = @json($kategoriStats ?? []);
@@ -434,7 +435,7 @@
                 new ApexCharts(document.querySelector("#chart-laporan"), {
                     series: [{
                         name: 'Laporan',
-                        data: Object.values(chartData)
+                        data: Object.values(chartData).map(Number)
                     }],
                     chart: {
                         type: 'area',
@@ -497,23 +498,34 @@
             if (Object.keys(kategoriStats).length > 0) {
                 const labels = Object.keys(kategoriStats);
 
-                // Logika warna yang disinkronkan dengan Blade
+                // Paksa data menjadi tipe Number agar tidak NaN saat render di hosting
+                const seriesData = Object.values(kategoriStats).map(Number);
+
                 const dynamicColors = labels.map(label => {
                     const labelText = label.toLowerCase();
                     if (labelText.includes('rusak') || labelText.includes('kerusakan')) return '#FF0000';
                     if (labelText.includes('bersih') || labelText.includes('kebersihan')) return '#10B981';
-                    return '#3B82F6'; // Default Blue
+                    return '#3B82F6';
                 });
 
                 new ApexCharts(document.querySelector("#chart-kategori"), {
-                    series: Object.values(kategoriStats),
+                    series: seriesData,
                     labels: labels,
                     chart: {
                         type: 'donut',
                         height: 260,
-                        fontFamily: 'Inter, sans-serif'
+                        fontFamily: 'Inter, sans-serif',
+                        animations: {
+                            enabled: true,
+                            speed: 800
+                        }
                     },
                     colors: dynamicColors,
+                    // Tambahkan fill solid untuk mencegah warna transparan di beberapa browser/server
+                    fill: {
+                        type: 'solid',
+                        opacity: 1
+                    },
                     stroke: {
                         show: false
                     },
@@ -522,7 +534,7 @@
                     },
                     legend: {
                         show: false
-                    }, // Legend manual sudah ada di Blade
+                    },
                     plotOptions: {
                         pie: {
                             donut: {
@@ -550,8 +562,7 @@
                     }]
                 }).render();
             }
-        });
-
+        };
         // Inisialisasi Feather Icons
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof feather !== 'undefined') {
