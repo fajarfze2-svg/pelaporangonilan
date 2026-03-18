@@ -26,14 +26,19 @@ class PublicLaporanController extends Controller
             ->whereYear('created_at', $now->year)
             ->count();
 
-        // 4. Bonus: Rata-rata Respon (Untuk mengisi angka "3 Jam" di UI Anda)
-        // Menghitung selisih created_at dan updated_at (atau kolom tanggapan) dalam satuan jam
-        $rataRataRespon = Laporan::where('status', 'selesai')
+        // 4. Rata-rata Jam Respon
+        // Mengambil semua laporan yang sudah disentuh/direspon (status bukan 'baru')
+        $rataRataResponDalamMenit = Laporan::where('status', '!=', 'baru')
             ->whereNotNull('updated_at')
             ->get()
             ->avg(function ($laporan) {
-                return $laporan->created_at->diffInHours($laporan->updated_at);
+                // Hitung selisih dalam MENIT agar lebih akurat (tidak langsung 0 jika di bawah 1 jam)
+                return $laporan->created_at->diffInMinutes($laporan->updated_at);
             }) ?? 0;
+
+        // Konversi dari menit ke jam, dan bulatkan ke atas (ceil)
+        // Contoh: Jika rata-rata 30 menit, maka akan dibulatkan tampil menjadi "1" Jam
+        $rataRataRespon = ceil($rataRataResponDalamMenit / 60);
 
         return view('welcome', compact(
             'totalLaporan',
