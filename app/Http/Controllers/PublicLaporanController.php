@@ -11,40 +11,29 @@ class PublicLaporanController extends Controller
 
     public function index()
     {
-        // Menggunakan Carbon secara langsung untuk efisiensi
         $now = \Carbon\Carbon::now();
 
         // 1. Total Seluruh Laporan
         $totalLaporan = Laporan::count();
 
         // 2. Laporan Selesai
-        // Catatan: Pastikan value 'selesai' sesuai dengan database Anda (misal: 'Selesai' atau 'Finished')
         $laporanSelesai = Laporan::where('status', 'selesai')->count();
 
-        // 3. Rekap Laporan Bulan Ini (Otomatis reset tiap ganti bulan)
+        // 3. Rekap Laporan Bulan Ini
         $laporanBulanIni = Laporan::whereMonth('created_at', $now->month)
             ->whereYear('created_at', $now->year)
             ->count();
 
-        // 4. Rata-rata Jam Respon
-        // Mengambil semua laporan yang sudah disentuh/direspon (status bukan 'baru')
-        $rataRataResponDalamMenit = Laporan::where('status', '!=', 'baru')
-            ->whereNotNull('updated_at')
-            ->get()
-            ->avg(function ($laporan) {
-                // Hitung selisih dalam MENIT agar lebih akurat (tidak langsung 0 jika di bawah 1 jam)
-                return $laporan->created_at->diffInMinutes($laporan->updated_at);
-            }) ?? 0;
+        // 4. Laporan yang Sedang Dikerjakan (Menggantikan Rata-rata Respon)
+        // Menghitung jumlah laporan yang statusnya 'diproses'
+        $sedangDiproses = Laporan::where('status', 'diproses')->count();
 
-        // Konversi dari menit ke jam, dan bulatkan ke atas (ceil)
-        // Contoh: Jika rata-rata 30 menit, maka akan dibulatkan tampil menjadi "1" Jam
-        $rataRataRespon = ceil($rataRataResponDalamMenit / 60);
-
+        // Pastikan variabel 'sedangDiproses' ikut dikirim ke view
         return view('welcome', compact(
             'totalLaporan',
             'laporanSelesai',
             'laporanBulanIni',
-            'rataRataRespon'
+            'sedangDiproses'
         ));
     }
 

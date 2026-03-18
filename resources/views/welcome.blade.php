@@ -149,69 +149,80 @@
 
 <body class="font-sans bg-gov-50 text-gov-900 antialiased selection:bg-navy-500 selection:text-white overflow-x-hidden">
 
-{{-- ================= NAVBAR ================= --}}
-<nav id="navbar" class="fixed top-4 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 flex justify-center">
-    <div id="nav-container" class="relative w-full max-w-5xl bg-navy-900/50 backdrop-blur-md border border-white/10 rounded-full p-2 flex items-center justify-between transition-all duration-500 shadow-glass">
+    {{-- ================= NAVBAR ================= --}}
+    <nav id="navbar"
+        class="fixed top-4 left-0 right-0 z-50 transition-all duration-500 px-4 sm:px-6 flex justify-center">
+        <div id="nav-container"
+            class="relative w-full max-w-5xl bg-navy-900/50 backdrop-blur-md border border-white/10 rounded-full p-2 flex items-center justify-between transition-all duration-500 shadow-glass">
 
-        {{-- 1. Sisi Kiri: Hamburger Menu (Hanya Mobile) --}}
-        <div class="flex items-center z-10">
-            <button id="mobile-menu-btn" class="md:hidden w-10 h-10 ml-1 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white active:scale-90 transition-all">
-                <i data-feather="menu" class="w-5 h-5"></i>
-            </button>
+            {{-- 1. Sisi Kiri: Hamburger Menu (Hanya Mobile) --}}
+            <div class="flex items-center z-10">
+                <button id="mobile-menu-btn"
+                    class="md:hidden w-10 h-10 ml-1 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white active:scale-90 transition-all">
+                    <i data-feather="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            {{-- 2. Sisi Tengah: Navigasi Desktop (Benar-benar Center secara Absolut) --}}
+            {{-- whitespace-nowrap memastikan teks tidak terbagi atas bawah --}}
+            <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 text-sm font-semibold text-white whitespace-nowrap"
+                id="nav-menu">
+                <a href="#"
+                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Beranda</a>
+                <a href="#layanan"
+                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Layanan</a>
+                <a href="#tracking"
+                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Cek
+                    Status</a>
+                <a href="#faq"
+                    class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Bantuan</a>
+            </div>
+
+            {{-- 3. Sisi Kanan: Tombol Portal --}}
+            <div class="flex items-center z-10 mr-1">
+                @auth
+                    <a href="{{ url('/dashboard') }}" id="nav-btn"
+                        class="whitespace-nowrap flex items-center gap-2 px-5 md:px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-xs md:text-sm font-bold active:scale-95 transition-all shadow-glow-gold hover:bg-gold-400 tracking-wide">
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" id="nav-btn"
+                        class="whitespace-nowrap flex items-center gap-2 px-5 md:px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-xs md:text-sm font-bold active:scale-95 transition-all shadow-glow-gold group hover:bg-gold-400 tracking-wide">
+                        <i data-feather="log-in" class="w-4 h-4 hidden sm:block"></i> Portal Admin
+                    </a>
+                @endauth
+            </div>
+
         </div>
-
-        {{-- 2. Sisi Tengah: Navigasi Desktop (Benar-benar Center secara Absolut) --}}
-        {{-- whitespace-nowrap memastikan teks tidak terbagi atas bawah --}}
-        <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 text-sm font-semibold text-white whitespace-nowrap" id="nav-menu">
-            <a href="#" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Beranda</a>
-            <a href="#layanan" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Layanan</a>
-            <a href="#tracking" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Cek Status</a>
-            <a href="#faq" class="nav-link px-4 py-2 rounded-full hover:bg-white/10 hover:text-gold-400 transition-all tracking-wide">Bantuan</a>
-        </div>
-
-        {{-- 3. Sisi Kanan: Tombol Portal --}}
-        <div class="flex items-center z-10 mr-1">
-            @auth
-                <a href="{{ url('/dashboard') }}" id="nav-btn" class="whitespace-nowrap flex items-center gap-2 px-5 md:px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-xs md:text-sm font-bold active:scale-95 transition-all shadow-glow-gold hover:bg-gold-400 tracking-wide">
-                    Dashboard
-                </a>
-            @else
-                <a href="{{ route('login') }}" id="nav-btn" class="whitespace-nowrap flex items-center gap-2 px-5 md:px-6 py-2.5 bg-gold-500 text-navy-900 rounded-full text-xs md:text-sm font-bold active:scale-95 transition-all shadow-glow-gold group hover:bg-gold-400 tracking-wide">
-                    <i data-feather="log-in" class="w-4 h-4 hidden sm:block"></i> Portal Admin
-                </a>
-            @endauth
-        </div>
-
+    </nav>
     </div>
-</nav>
-            </div>
-        </div>
+    </div>
 
-        {{-- Mobile Drawer (Menu Overlay) --}}
-        <div id="mobile-drawer" class="fixed inset-0 z-[60] hidden">
-            <div class="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" id="drawer-overlay"></div>
-            <div class="absolute top-4 right-4 left-4 bg-navy-900 border border-white/10 rounded-3xl p-6 shadow-2xl transform transition-transform duration-300 -translate-y-full"
-                id="drawer-content">
-                <div class="flex justify-between items-center mb-8">
-                    <span class="text-gold-500 font-black tracking-widest text-xs uppercase">Menu Navigasi</span>
-                    <button id="close-menu-btn"
-                        class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-white">
-                        <i data-feather="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <a href="#"
-                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Beranda</a>
-                    <a href="#layanan"
-                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Layanan</a>
-                    <a href="#tracking"
-                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Cek
-                        Status</a>
-                    <a href="#faq"
-                        class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Bantuan</a>
-                </div>
+    {{-- Mobile Drawer (Menu Overlay) --}}
+    <div id="mobile-drawer" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" id="drawer-overlay"></div>
+        <div class="absolute top-4 right-4 left-4 bg-navy-900 border border-white/10 rounded-3xl p-6 shadow-2xl transform transition-transform duration-300 -translate-y-full"
+            id="drawer-content">
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-gold-500 font-black tracking-widest text-xs uppercase">Menu Navigasi</span>
+                <button id="close-menu-btn"
+                    class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-white">
+                    <i data-feather="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-4">
+                <a href="#"
+                    class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Beranda</a>
+                <a href="#layanan"
+                    class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Layanan</a>
+                <a href="#tracking"
+                    class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Cek
+                    Status</a>
+                <a href="#faq"
+                    class="mobile-link text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-white/5 hover:text-gold-400 transition-all">Bantuan</a>
             </div>
         </div>
+    </div>
     </nav>
 
     {{-- ================= HERO SECTION ================= --}}
@@ -265,9 +276,12 @@
         <div class="max-w-6xl mx-auto px-6">
             <div
                 class="bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-3d border border-gov-100 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gov-100 relative overflow-hidden">
+
+                {{-- Garis Gradien Atas --}}
                 <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-navy-500 via-gold-500 to-navy-500">
                 </div>
 
+                {{-- KARTU 1: Total Laporan --}}
                 <div
                     class="text-center px-4 hover:-translate-y-2 active:scale-95 transition-transform duration-300 cursor-default group">
                     <div
@@ -280,6 +294,7 @@
                     <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Total Laporan</p>
                 </div>
 
+                {{-- KARTU 2: Selesai Ditangani --}}
                 <div
                     class="text-center px-4 hover:-translate-y-2 active:scale-95 transition-transform duration-300 cursor-default group">
                     <div
@@ -292,21 +307,20 @@
                     <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Selesai Ditangani</p>
                 </div>
 
+                {{-- KARTU 3: Sedang Dikerjakan --}}
                 <div
                     class="text-center px-4 hover:-translate-y-2 active:scale-95 transition-transform duration-300 cursor-default group">
                     <div
                         class="w-14 h-14 mx-auto bg-gov-50 rounded-2xl flex items-center justify-center mb-4 border border-gov-100 group-hover:border-gold-500 transition-colors">
-                        <i data-feather="clock"
+                        <i data-feather="tool"
                             class="w-6 h-6 text-navy-500 group-hover:text-gold-500 transition-colors"></i>
                     </div>
-                    <div class="flex items-baseline justify-center gap-1">
-                        <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
-                            data-target="{{ round($rataRataRespon ?? 0) }}">0</h3>
-                        <span class="text-sm font-bold text-gold-500">Jam</span>
-                    </div>
-                    <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Rata-rata Respon</p>
+                    <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
+                        data-target="{{ $sedangDiproses ?? 0 }}">0</h3>
+                    <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Sedang Dikerjakan</p>
                 </div>
 
+                {{-- KARTU 4: Laporan Bulan Ini --}}
                 <div
                     class="text-center px-4 hover:-translate-y-2 active:scale-95 transition-transform duration-300 cursor-default group">
                     <div
@@ -314,16 +328,14 @@
                         <i data-feather="calendar"
                             class="w-6 h-6 text-navy-500 group-hover:text-gold-500 transition-colors"></i>
                     </div>
-                    <div class="flex items-baseline justify-center gap-1">
-                        <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
-                            data-target="{{ $laporanBulanIni ?? 0 }}">0</h3>
-                    </div>
+                    <h3 class="text-4xl font-extrabold text-navy-900 tracking-tight counter"
+                        data-target="{{ $laporanBulanIni ?? 0 }}">0</h3>
                     <p class="text-[11px] font-bold text-gov-500 uppercase tracking-widest mt-2">Laporan Bulan Ini</p>
                 </div>
+
             </div>
         </div>
     </section>
-
     {{-- ================= LAYANAN SECTION ================= --}}
     <section id="layanan" class="py-24 bg-gov-50 relative">
         <div class="max-w-7xl mx-auto px-6 relative z-10">
